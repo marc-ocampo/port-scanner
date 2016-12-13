@@ -10,6 +10,7 @@ from datetime import datetime
 import socket
 import sys
 import os
+import ipcalc
 
 # GLOBAL VARIABLES
 target_hosts = []
@@ -28,11 +29,26 @@ def update_target_hosts_for_ip_range(input_address):
     host = ip_split[0] + '.' + ip_split[1] + '.' + ip_split[2] + '.' + str(i)
     input_is_valid_host(host)
 
+def generate_subnet_mask(mask_num):
+  # source: http://stackoverflow.com/questions/10508560/get-ip-mask-from-ip-address-and-mask-length-in-python
+  mask = (1<<32) - (1<<32>>mask_num)
+  subnet_mask = socket.inet_ntoa(struct.pack(">L", mask)).split('.')
+
+  return subnet_mask
+
+def parse_ip_range(input_address):
+  for ip_addr in ipcalc.Network(input_address):
+    target_hosts.append(str(ip_addr))
+
+  #print target_hosts
+
 
 def input_is_ip_network(input_address):
-  # TODO: implement parsing of subnetting here
   if 3 == input_address.count('.') and 1 == input_address.count('/'):
-    pass
+    parse_ip_range(input_address)
+    return True
+  else:
+    return False
 
 
 def input_is_ip_range(input_address):
@@ -78,13 +94,13 @@ def check_input_ports(input_port):
 
 
 def check_input_address(input_address):
-  if input_is_valid_host(input_address):
+  if input_is_ip_network(input_address):
     return True
 
   elif input_is_ip_range(input_address):
     return True
 
-  elif input_is_ip_network(input_address):
+  elif input_is_valid_host(input_address):
     return True
 
   else:
@@ -116,44 +132,53 @@ def grab_banner(sock):
   return service
 
 
+def scan_target_host_address_port(host, port, open_port_list):
+  try:
+    #print 'Checking connection on ' + host + ':' + str(port)
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    result = sock.connect_ex((host, port))
+
+    if 0 == result:
+      service = '' #= grab_banner(sock)
+      # TODO fetch banner here?
+      open_port_list.append((port, service))
+
+    sock.close()
+
+  except KeyboardInterrupt:
+    print 'Program terminated with Ctrl+C.'
+    sys.exit()
+
+  except socket.gaierror:
+    print 'Program terminated. Hostname could not be resolved.'
+    sys.exit()
+
+  except socket.error:
+    print "Program terminated. Could not connect to server."
+    sys.exit()
+
 def scan_target_hosts():
+  print 'Scanning...'
   for host in target_hosts:
     open_port_list = [];
 
     for port in target_ports:
-      try:
-        print 'Checking connection on ' + host + ':' + str(port)
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        result = sock.connect_ex((host, port))
-        
-        if 0 == result:
-          service = '' #= grab_banner(sock)
-          open_port_list.append((port, service))
-
-        sock.close()
-      except KeyboardInterrupt:
-        print 'Program terminated with Ctrl+C.'
-        sys.exit()
-
-      except socket.gaierror:
-        print 'Program terminated. Hostname could not be resolved.'
-        sys.exit()
-
-      except socket.error:
-        print "Program terminated. Could not connect to server."
-        sys.exit()
+      scan_target_host_address_port(host, port, open_port_list)
 
     display_open_port(host, open_port_list)
+
 
 def display_total_time(start, end) :
   total_time = end - start;
   print 'Scanning Time: ' + str(total_time)
+
 
 def port_scanner():
   divider()
   print 'Welcome to Port Scanner!'
   target_host = raw_input('Enter host name to scan: ')
   target_port = raw_input('Enter ports to scan: ')
+  divider()
 
   if check_input_address(target_host) and check_input_ports(target_port):
     time_start = datetime.now()

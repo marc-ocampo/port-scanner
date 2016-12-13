@@ -1,5 +1,11 @@
 # port-scanner
 
+REQUIREMENTS:
+- python 2.7
+- ipcalc (https://pypi.python.org/pypi/ipcalc)
+
+
+
 Inputs:
 - host name e.g. www.google.com
 - ip address e.g. 1.1.1.1
@@ -11,6 +17,8 @@ TCP Scanning
 - specify port e.g. 80
 - specify port range e.g. 90-10000
 
+
+ADDITIONALS:
 UDP Scanning
 - bonus 15%
 - at least port 53 and 161
