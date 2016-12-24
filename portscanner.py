@@ -4,6 +4,11 @@
 # PROJECT : Port Scanner (ee298)
 # AUTHOR  : Marc Stephen D. Ocampo (2006-03669)
 #######################################################################
+# TODO
+# Use raw TCP packets instead of connect_ex
+# Get services
+# Identify remote OS
+# UDP scan
 
 # MODULES
 from datetime import datetime
@@ -83,7 +88,7 @@ class InputParser(object):
   def parse_ip_range(self):
     ip_split = self.hosts_str.split('.')
     ip_range = ip_split[3].split('-')
-    
+
     for i in range(int(ip_range[0]), 1 + int(ip_range[1])):
       host = ip_split[0] + '.' + ip_split[1] + '.' + ip_split[2] + '.' + str(i)
       self.target_hosts.append(host)
