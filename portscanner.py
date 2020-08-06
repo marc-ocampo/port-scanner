@@ -83,7 +83,7 @@ class InputParser(object):
     elif INPUT_TYPE_HOST == self.input_type:
       self.parse_host()
     else:
-      print 'Unable to parse input host/s.'
+      print('Unable to parse input host/s.')
 
   def parse_ip_range(self):
     ip_split = self.hosts_str.split('.')
@@ -107,7 +107,7 @@ class PortScanner(object):
     self.scan_all_hosts()
 
   def scan_all_hosts(self):
-    print 'Scanning'
+    print('Scanning')
     for host in self.host_list:
       self.scan_all_ports_per_host(host)
 
@@ -124,13 +124,13 @@ class PortScanner(object):
       self.check_result(port, result)
       sock.close()
     except KeyboardInterrupt:
-      print 'User terminated the program.'
+      print('User terminated the program.')
       sys.exit()
     except socket.gaiaerror:
-      print 'Hostname could not be resolved.'
+      print('Hostname could not be resolved.')
       sys.exit()
     except socket.error:
-      print 'Could not connect to server.'
+      print('Could not connect to server.')
       sys.exit()
 
   def check_result(self, port, result):
@@ -140,21 +140,21 @@ class PortScanner(object):
       self.open_port_list.append((port, service))
 
   def display_open_ports(self, host):
-    print '-' * 60
-    print 'Scan report for ' + host
+    print('-' * 60)
+    print('Scan report for ' + host)
     if 0 == len(self.open_port_list):
-      print 'Unable to find open ports for ' + host + '.'
+      print('Unable to find open ports for ' + host + '.')
     else:
       for port_service_pair in self.open_port_list:
-        print str(port_service_pair[0]) + '/tcp open\r' + port_service_pair[1]
-    print '-' * 60
+        print(str(port_service_pair[0]) + '/tcp open\r' + port_service_pair[1])
+    print('-' * 60)
 
 def trigger_port_scanner():
-  print '-' * 60
-  print 'Welcome to Port Scanner!'
-  input_hosts_string = raw_input('Enter host name to scan: ')
-  input_ports_string = raw_input('Enter ports to scan: ')
-  print '-' * 60
+  print('-' * 60)
+  print('Welcome to Port Scanner!')
+  input_hosts_string = input('Enter host name to scan: ')
+  input_ports_string = input('Enter ports to scan: ')
+  print('-' * 60)
 
   input_parser = InputParser(input_hosts_string, input_ports_string)
   port_scanner = PortScanner(input_parser)
