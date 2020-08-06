@@ -1,5 +1,15 @@
 # port-scanner
 
+#######################################################################
+# PROJECT : Port Scanner (ee298)
+# AUTHOR  : Marc Stephen D. Ocampo (2006-03669)
+#######################################################################
+# TODO
+# Use raw TCP packets instead of connect_ex
+# Get services
+# Identify remote OS
+# UDP scan
+#######################################################################
 REQUIREMENTS:
 - python 2.7
 - ipcalc (https://pypi.python.org/pypi/ipcalc)
