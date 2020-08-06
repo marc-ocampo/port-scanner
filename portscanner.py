@@ -6,8 +6,8 @@ import sys
 
 class PortScanner(object):
   def __init__(self, input_parser):
-    self.host_list = input_parser.get_target_hosts()
-    self.port_list = input_parser.get_target_ports()
+    self.host_list = input_parser.target_hosts
+    self.port_list = input_parser.target_ports
     self.scan_all_hosts()
 
   def scan_all_hosts(self):

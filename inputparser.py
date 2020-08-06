@@ -14,12 +14,6 @@ class InputParser(object):
     self.target_ports = []
     self.parse_user_input()
 
-  def get_target_hosts(self):
-    return self.target_hosts
-
-  def get_target_ports(self):
-    return self.target_ports
-
   def parse_user_input(self):
     self.input_type = self.find_input_host_type()
     self.parse_hosts_string()
