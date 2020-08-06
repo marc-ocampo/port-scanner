@@ -11,13 +11,13 @@ class PortScanner(object):
     self.scan_all_hosts()
 
   def scan_all_hosts(self):
-    print('Scanning')
     for host in self.host_list:
       self.scan_all_ports_per_host(host)
 
   def scan_all_ports_per_host(self, host):
     self.open_port_list = []
     for port in self.port_list:
+      print('Scanning ' + str(host) + ':' + str(port))
       self.scan_target_host_port(host, port)
     self.display_open_ports(host)
 
